@@ -408,6 +408,21 @@ void keyball_oled_render_keyinfo(void) {
 #endif
 }
 
+void keyball_oled_render_layerinfo(void) {
+#ifdef OLED_ENABLE
+    // Format: `Layer:{layer state}`
+    //
+    // Output example:
+    //
+    //     Layer:-23------------
+    //
+    oled_write_P(PSTR("Layer:"), false);
+    for (uint8_t i = 1; i < 16; i++) {
+        oled_write_char((layer_state_is(i) ? to_1x(i) : '_'), false);
+    }
+#endif
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // Public API functions
 
@@ -504,7 +519,7 @@ bool process_record_kb_bmp(uint16_t keycode, keyrecord_t *record) {
             extern void register_button(bool, enum mouse_buttons);
             register_button(record->event.pressed, MOUSE_BTN_MASK(keycode - KC_MS_BTN1));
             // to apply QK_MODS actions, allow to process others.
-            return true;
+            return false;
         }
 #endif
 
